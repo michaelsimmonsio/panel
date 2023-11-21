@@ -79,17 +79,22 @@ Regions &rarr; View &rarr; {{ $region->name }}
                                            {{ $region->locations->contains($location->id) ? 'checked' : '' }}>
                                     {{ $location->short }} - {{ $location->long }}
                                 </label>
-                                <!-- Individual form for adding location to region -->
-                                <form action="{{ route('admin.regions.assign', ['region' => $region->id]) }}" method="POST" style="display: inline;">
-                                    {!! csrf_field() !!}
-                                    <input type="hidden" name="locations[]" value="{{ $location->id }}">
-                                    <button type="submit" class="btn btn-xs btn-success">Add</button>
-                                </form>
-                                <form action="{{ route('admin.regions.unassign', ['region' => $region->id]) }}" method="POST" style="display: inline;">
+                                <!-- Individual form for adding/removing location to/from region -->
+                                @if($region->locations->contains($location->id))
+                                <form action="{{ route('admin.regions.unassign', ['region' => $region->id]) }}" method="POST"
+                                      style="display: inline;">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="locations[]" value="{{ $location->id }}">
                                     <button type="submit" class="btn btn-xs btn-danger">Remove</button>
                                 </form>
+                                @else
+                                <form action="{{ route('admin.regions.assign', ['region' => $region->id]) }}" method="POST"
+                                      style="display: inline;">
+                                    {!! csrf_field() !!}
+                                    <input type="hidden" name="locations[]" value="{{ $location->id }}">
+                                    <button type="submit" class="btn btn-xs btn-success">Add</button>
+                                </form>
+                                @endif
                             </div>
                             @endforeach
                             @else
@@ -101,7 +106,8 @@ Regions &rarr; View &rarr; {{ $region->name }}
                         </div>
                     </div>
                 </div>
-            </
+            </div>
+
 
 
 

@@ -204,6 +204,8 @@ class Node extends Model
         return $this->belongsTo(Location::class);
     }
 
+
+
     /**
      * Gets the servers associated with a node.
      */

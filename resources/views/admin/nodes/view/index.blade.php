@@ -49,6 +49,10 @@
                                 <td>Total CPU Threads</td>
                                 <td data-attr="info-cpus"><i class="fa fa-refresh fa-fw fa-spin"></i></td>
                             </tr>
+                            <tr>
+                                <td>Region</td>
+                                <td>{{$node->location->region_name}}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
