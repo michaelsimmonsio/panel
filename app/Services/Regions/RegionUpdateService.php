@@ -1,29 +1,20 @@
 <?php
 
-namespace Pterodactyl\Services\Locations;
+namespace Pterodactyl\Services\Regions;
 
-use Pterodactyl\Models\Location;
-use Pterodactyl\Contracts\Repository\LocationRepositoryInterface;
+use Pterodactyl\Models\Region;
+use Pterodactyl\Contracts\Repository\RegionRepositoryInterface;
 
-class LocationUpdateService
+class RegionUpdateService
 {
-    /**
-     * LocationUpdateService constructor.
-     */
-    public function __construct(protected LocationRepositoryInterface $repository)
+    public function __construct(protected RegionRepositoryInterface $repository)
     {
     }
 
-    /**
-     * Update an existing location.
-     *
-     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
-     * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
-     */
-    public function handle(Location|int $location, array $data): Location
+    public function handle(Region|int $region, array $data): Region
     {
-        $location = ($location instanceof Location) ? $location->id : $location;
+        $region = ($region instanceof Region) ? $region->id : $region;
 
-        return $this->repository->update($location, $data);
+        return $this->repository->update($region, $data);
     }
 }

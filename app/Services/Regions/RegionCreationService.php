@@ -1,25 +1,17 @@
 <?php
 
-namespace Pterodactyl\Services\Locations;
+namespace Pterodactyl\Services\Regions;
 
-use Pterodactyl\Models\Location;
-use Pterodactyl\Contracts\Repository\LocationRepositoryInterface;
+use Pterodactyl\Models\Region;
+use Pterodactyl\Contracts\Repository\RegionRepositoryInterface;
 
-class LocationCreationService
+class RegionCreationService
 {
-    /**
-     * LocationCreationService constructor.
-     */
-    public function __construct(protected LocationRepositoryInterface $repository)
+    public function __construct(protected RegionRepositoryInterface $repository)
     {
     }
 
-    /**
-     * Create a new location.
-     *
-     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
-     */
-    public function handle(array $data): Location
+    public function handle(array $data): Region
     {
         return $this->repository->create($data);
     }

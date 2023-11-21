@@ -3,9 +3,11 @@
 namespace Pterodactyl\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Pterodactyl\Contracts\Repository\RegionRepositoryInterface;
 use Pterodactyl\Repositories\Eloquent\EggRepository;
 use Pterodactyl\Repositories\Eloquent\NestRepository;
 use Pterodactyl\Repositories\Eloquent\NodeRepository;
+use Pterodactyl\Repositories\Eloquent\RegionRepository;
 use Pterodactyl\Repositories\Eloquent\TaskRepository;
 use Pterodactyl\Repositories\Eloquent\UserRepository;
 use Pterodactyl\Repositories\Eloquent\ApiKeyRepository;
@@ -53,6 +55,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EggRepositoryInterface::class, EggRepository::class);
         $this->app->bind(EggVariableRepositoryInterface::class, EggVariableRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
+        $this->app->bind(RegionRepositoryInterface::class, RegionRepository::class);
         $this->app->bind(NestRepositoryInterface::class, NestRepository::class);
         $this->app->bind(NodeRepositoryInterface::class, NodeRepository::class);
         $this->app->bind(ScheduleRepositoryInterface::class, ScheduleRepository::class);

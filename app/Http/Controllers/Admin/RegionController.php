@@ -2,102 +2,139 @@
 
 namespace Pterodactyl\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Pterodactyl\Http\Requests\Admin\AssignLocationsToRegionFormRequest;
 use Pterodactyl\Models\Location;
+use Pterodactyl\Models\Region;
 use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Exceptions\DisplayException;
 use Pterodactyl\Http\Controllers\Controller;
-use Pterodactyl\Http\Requests\Admin\LocationFormRequest;
-use Pterodactyl\Services\Locations\LocationUpdateService;
-use Pterodactyl\Services\Locations\LocationCreationService;
-use Pterodactyl\Services\Locations\LocationDeletionService;
-use Pterodactyl\Contracts\Repository\LocationRepositoryInterface;
+use Pterodactyl\Http\Requests\Admin\RegionFormRequest;
+use Pterodactyl\Services\Regions\RegionUpdateService;
+use Pterodactyl\Services\Regions\RegionCreationService;
+use Pterodactyl\Services\Regions\RegionDeletionService;
+use Pterodactyl\Contracts\Repository\RegionRepositoryInterface;
 
-class LocationController extends Controller
+class RegionController extends Controller
 {
     /**
-     * LocationController constructor.
+     * RegionsController constructor.
      */
     public function __construct(
         protected AlertsMessageBag $alert,
-        protected LocationCreationService $creationService,
-        protected LocationDeletionService $deletionService,
-        protected LocationRepositoryInterface $repository,
-        protected LocationUpdateService $updateService,
+        protected RegionCreationService $creationService,
+        protected RegionDeletionService $deletionService,
+        protected RegionRepositoryInterface $repository,
+        protected RegionUpdateService $updateService,
         protected ViewFactory $view
     ) {
     }
 
     /**
-     * Return the location overview page.
+     * Return the regions overview page.
      */
     public function index(): View
     {
-        return $this->view->make('admin.locations.index', [
-            'locations' => $this->repository->getAllWithDetails(),
+        return $this->view->make('admin.regions.index', [
+            'regions' => $this->repository->getAllWithDetails(),
         ]);
     }
 
     /**
-     * Return the location view page.
+     * Return the region view page.
      *
      * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
      */
     public function view(int $id): View
     {
-        return $this->view->make('admin.locations.view', [
-            'location' => $this->repository->getWithNodes($id),
+        return $this->view->make('admin.regions.view', [
+            'region' => $this->repository->getWithLocations($id),
         ]);
     }
 
     /**
-     * Handle request to create new location.
+     * Handle request to create a new region.
      *
      * @throws \Throwable
      */
-    public function create(LocationFormRequest $request): RedirectResponse
+    public function create(RegionFormRequest $request): RedirectResponse
     {
-        $location = $this->creationService->handle($request->normalize());
-        $this->alert->success('Location was created successfully.')->flash();
+        $region = $this->creationService->handle($request->normalize());
+        $this->alert->success('Region was created successfully.')->flash();
 
-        return redirect()->route('admin.locations.view', $location->id);
+        return redirect()->route('admin.regions.view', $region->id);
     }
 
     /**
-     * Handle request to update or delete location.
+     * Handle request to update or delete a region.
      *
      * @throws \Throwable
      */
-    public function update(LocationFormRequest $request, Location $location): RedirectResponse
+    public function update(RegionFormRequest $request, Region $region): RedirectResponse
     {
         if ($request->input('action') === 'delete') {
-            return $this->delete($location);
+            return $this->delete($region);
         }
 
-        $this->updateService->handle($location->id, $request->normalize());
-        $this->alert->success('Location was updated successfully.')->flash();
+        $this->updateService->handle($region->id, $request->normalize());
+        $this->alert->success('Region was updated successfully.')->flash();
 
-        return redirect()->route('admin.locations.view', $location->id);
+        return redirect()->route('admin.regions.view', $region->id);
     }
 
     /**
-     * Delete a location from the system.
+     * Delete a region from the system.
      *
      * @throws \Exception
      * @throws \Pterodactyl\Exceptions\DisplayException
      */
-    public function delete(Location $location): RedirectResponse
+    public function delete(Region $region): RedirectResponse
     {
         try {
-            $this->deletionService->handle($location->id);
+            $this->deletionService->handle($region->id);
 
-            return redirect()->route('admin.locations');
+            return redirect()->route('admin.regions');
         } catch (DisplayException $ex) {
             $this->alert->danger($ex->getMessage())->flash();
         }
 
-        return redirect()->route('admin.locations.view', $location->id);
+        return redirect()->route('admin.regions.view', $region->id);
     }
+    public function assignLocations(AssignLocationsToRegionFormRequest $request, $regionId)
+    {
+        $locationIds = $request->input('locations', []);
+
+        // Update each location with the new region_id
+        Location::whereIn('id', $locationIds)->update(['region_id' => $regionId]);
+
+        return Redirect::back()->with('success', 'Locations assigned successfully.');
+    }
+    public function unassignLocations(AssignLocationsToRegionFormRequest $request, $regionId)
+    {
+        $locationIds = $request->input('locations', []);
+
+        // Set the region_id to null for each location, unassigning them from the region
+        Location::whereIn('id', $locationIds)->update(['region_id' => null]);
+
+        return Redirect::back()->with('success', 'Locations unassigned successfully.');
+    }
+
+
+
+    public function show($id)
+    {
+        $region = Region::with('locations')->findOrFail($id);
+        $allLocations = Location::all();
+
+        return view('admin.regions.view', [
+            'region' => $region,
+            'allLocations' => $allLocations
+        ]);
+    }
+
+
+
 }

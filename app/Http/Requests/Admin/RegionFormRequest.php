@@ -2,9 +2,9 @@
 
 namespace Pterodactyl\Http\Requests\Admin;
 
-use Pterodactyl\Models\Location;
+use Pterodactyl\Models\Region;
 
-class LocationFormRequest extends AdminFormRequest
+class RegionFormRequest extends AdminFormRequest
 {
     /**
      * Set up the validation rules to use for these requests.
@@ -12,9 +12,9 @@ class LocationFormRequest extends AdminFormRequest
     public function rules(): array
     {
         if ($this->method() === 'PATCH') {
-            return Location::getRulesForUpdate($this->route()->parameter('location')->id);
+            return Region::getRulesForUpdate($this->route()->parameter('region')->id);
         }
 
-        return Location::getRules();
+        return Region::getRules();
     }
 }

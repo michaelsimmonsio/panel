@@ -13,4 +13,20 @@ class Region extends Model
     {
         return $this->hasMany(Location::class);
     }
+
+
+
+    public static function getRules() {
+        return [
+            'name' => 'required|string|max:255',
+            // Add other rules as needed
+        ];
+    }
+
+    public static function getRulesForUpdate() {
+        return [
+            'name' => 'required|string|max:255',
+            // Add other rules as needed
+        ];
+    }
 }

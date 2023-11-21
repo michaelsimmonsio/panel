@@ -1,40 +1,22 @@
 <?php
 
-namespace Pterodactyl\Services\Locations;
+namespace Pterodactyl\Services\Regions;
 
-use Webmozart\Assert\Assert;
-use Pterodactyl\Models\Location;
-use Pterodactyl\Contracts\Repository\NodeRepositoryInterface;
-use Pterodactyl\Contracts\Repository\LocationRepositoryInterface;
-use Pterodactyl\Exceptions\Service\Location\HasActiveNodesException;
+use Pterodactyl\Models\Region;
+use Pterodactyl\Contracts\Repository\RegionRepositoryInterface;
 
-class LocationDeletionService
+class RegionDeletionService
 {
-    /**
-     * LocationDeletionService constructor.
-     */
-    public function __construct(
-        protected LocationRepositoryInterface $repository,
-        protected NodeRepositoryInterface $nodeRepository
-    ) {
+    public function __construct(protected RegionRepositoryInterface $repository)
+    {
     }
 
-    /**
-     * Delete an existing location.
-     *
-     * @throws \Pterodactyl\Exceptions\Service\Location\HasActiveNodesException
-     */
-    public function handle(Location|int $location): ?int
+    public function handle(Region|int $region): ?int
     {
-        $location = ($location instanceof Location) ? $location->id : $location;
+        $region = ($region instanceof Region) ? $region->id : $region;
 
-        Assert::integerish($location, 'First argument passed to handle must be numeric or an instance of ' . Location::class . ', received %s.');
+        // Add any checks for dependencies here if needed
 
-        $count = $this->nodeRepository->findCountWhere([['location_id', '=', $location]]);
-        if ($count > 0) {
-            throw new HasActiveNodesException(trans('exceptions.locations.has_nodes'));
-        }
-
-        return $this->repository->delete($location);
+        return $this->repository->delete($region);
     }
 }

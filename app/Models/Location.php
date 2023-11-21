@@ -63,4 +63,20 @@ class Location extends Model
     {
         return $this->hasManyThrough(Server::class, Node::class);
     }
+
+    /**
+     * Relation to regions model
+     */
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function getRegionNameAttribute() // chatgpt helped a lot with this. laravel interprets this as $location->region_name
+    {
+        return $this->region ? $this->region->name : null;
+    }
+
+
 }

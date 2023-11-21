@@ -12,17 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('locations', function (Blueprint $table) {
-            //
+            $table->unsignedBigInteger('region_id')->nullable();
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('locations', function (Blueprint $table) {
-            //
+            $table->dropForeign(['region_id']);
+            $table->dropColumn('region_id');
         });
     }
 };

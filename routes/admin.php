@@ -41,6 +41,28 @@ Route::group(['prefix' => 'locations'], function () {
 
 /*
 |--------------------------------------------------------------------------
+| Region  Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/regions
+|
+*/
+
+Route::group(['prefix' => 'regions', 'as' => 'admin.', 'namespace' => 'Admin'], function () {
+    Route::get('/', [Admin\RegionController::class, 'index'])->name('regions');
+    Route::get('/view/{region:id}', [Admin\RegionController::class, 'show'])->name('regions.view');
+    Route::post('/', [Admin\RegionController::class, 'create']);
+    Route::patch('/view/{region:id}', [Admin\RegionController::class, 'update']);
+    Route::post('/assign/{region:id}', [Admin\RegionController::class, 'assignLocations'])->name('regions.assign');
+    Route::post('/unassign/{region:id}', [Admin\RegionController::class, 'unassignLocations'])->name('regions.unassign');
+
+
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
 | Database Controller Routes
 |--------------------------------------------------------------------------
 |
@@ -54,6 +76,7 @@ Route::group(['prefix' => 'databases'], function () {
     Route::post('/', [Admin\DatabaseController::class, 'create']);
     Route::patch('/view/{host:id}', [Admin\DatabaseController::class, 'update']);
     Route::delete('/view/{host:id}', [Admin\DatabaseController::class, 'delete']);
+
 });
 
 /*

@@ -314,6 +314,16 @@ class Server extends Model
         return $this->belongsToThrough(Location::class, Node::class);
     }
 
+    public function region()
+    {
+        return $this->location()->region();
+    }
+
+    public function getRegionNameAttribute()
+    {
+        return $this->location()->region() ? $this->location()->region()->name : null;
+    }
+
     /**
      * Returns the associated server transfer.
      */

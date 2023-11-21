@@ -26,6 +26,13 @@
                         <label for="pShort" class="form-label">Short Code</label>
                         <input type="text" id="pShort" name="short" class="form-control" value="{{ $location->short }}" />
                     </div>
+
+                    <div class="form-group">
+                        <label for="pShort" class="form-label">Region</label>
+                        <p>{{$location->region_name}}</p>
+                    </div>
+
+
                     <div class="form-group">
                         <label for="pLong" class="form-label">Description</label>
                         <textarea id="pLong" name="long" class="form-control" rows="4">{{ $location->long }}</textarea>
