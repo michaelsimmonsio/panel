@@ -85,7 +85,7 @@ Regions &rarr; View &rarr; {{ $region->name }}
                                     <input type="hidden" name="locations[]" value="{{ $location->id }}">
                                     <button type="submit" class="btn btn-xs btn-success">Add</button>
                                 </form>
-                                <form action="{{ route('admin.regions.assign', ['region' => $region->id]) }}" method="POST" style="display: inline;">
+                                <form action="{{ route('admin.regions.unassign', ['region' => $region->id]) }}" method="POST" style="display: inline;">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="locations[]" value="{{ $location->id }}">
                                     <button type="submit" class="btn btn-xs btn-danger">Remove</button>
